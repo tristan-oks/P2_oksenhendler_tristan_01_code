@@ -1,0 +1,13 @@
+programme corrigé, mais l'approche globale est très mauvaise.
+
+Mon idée est de commencer par trier le fichier symptoms.txt avec la méthode Collection.sort.
+ensuite il ne reste qu'à compter les occurences qui seront triées
+
+symptom_ligne_precedente=""; symptom_count=0
+readline symptom;
+{if symptom = symptom_ligne_precedente, symptom_count+1
+else {write symptom_ligne_precedente, symptom_count;
+	symptom_ligne_precedente=symptom, symptom_count=1}
+}
+
+a peaufiner le start, il va ecrire "",0 (if symptom_ligne_precedente !="" ou symptom_count!=0)
