@@ -1,9 +1,13 @@
 package com.hemebiotech.analytics;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -17,29 +21,43 @@ public class AnalyticsCounter {
 	
 	private static ReadSymptomDataFromFile symptomData = new ReadSymptomDataFromFile("symptoms.txt");
 	private static List<String> symptomsList = symptomData.GetSymptoms();
+	private static Map<String, Integer> symptomsOccurence = new HashMap<String, Integer>();
 	
 	public static void main(String args[]) throws Exception {
 
-			//String line = reader.readLine();
-
-			//int i = 0;	// set i to 0 // inutile
-			//int headCount = 0;	// counts headaches //devenu inutile
 		symptomsList.sort(null); // tri alphabetique de la liste des symptomes. Va rendre le comptage beaucoup plus facile
-		String oldSymptom = "";
+		String oldSymptom = ""; // pour tester si le symptome change
+		int occurence = 0;		// pour compter les occurences des symptomes
+		
 		for (String line : symptomsList) {
-				if (line.equals(oldSymptom)) {System.out.println("same symptom : " + line);}
+				if (line.equals(oldSymptom)) {
+					occurence += 1; 
+					System.out.println("same symptom : " + line + ", occurence : " + occurence);
+					symptomsOccurence.put(line,occurence);
+					System.out.println("Map : " + line + " : " + symptomsOccurence.get(line)); // voir si la map se remplit bien
+					}
 				else {System.out.println("New symptom : " + line);
+					occurence = 1;
+					symptomsOccurence.put(line,occurence);
+					System.out.println("Map : " + line + " : " + symptomsOccurence.get(line)); // voir si la map se remplit bien
 					oldSymptom = line;
-					System.out.println("oldsymptom : " + oldSymptom);}
+					
+					//System.out.println("oldsymptom : " + oldSymptom);
+					}
 			}
+		fileWriter("result.out");
+	}
 		
 		// next generate output
-	try (// first get input
-	BufferedReader reader = new BufferedReader (new FileReader("symptoms.txt"))) {
-		FileWriter writer = new FileWriter ("result.out");
-		writer.write("headache: " + headCount + "\n");
-		writer.write("rash: " + rashCount + "\n");
-		writer.write("pupils: " + pupilCount + "\n");
+	static void fileWriter(String fileName) throws IOException {
+		FileWriter fileWriter = new FileWriter(fileName, false);
+		BufferedWriter writer = new BufferedWriter (fileWriter);
+		for(Map.Entry<String,Integer> entry : symptomsOccurence.entrySet()) {
+			writer.write(entry.getKey() + " : " + entry.getValue());
+		     // Retour à la ligne
+			writer.newLine();
+		}
 		writer.close();
 	}
-}}
+}
+		// result sort non trié, je capte pas
