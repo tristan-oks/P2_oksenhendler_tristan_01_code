@@ -13,21 +13,26 @@ import java.util.TreeMap;
  * @author ------
  *
  */
+
 public class AnalyticsCounter {
 		
-	public static void main(String args[]) throws IOException {
-		
+	public static void main(String args[]) {
+		try {
 		String symptomsFile;
 		String resultsFile;
 		if (args.length == 0) {symptomsFile = "symptoms.txt";resultsFile = "result.out";}
 		else if (args.length == 1) {symptomsFile = args[0];resultsFile = "result.out";}
 		else {symptomsFile = args[0];resultsFile = args[1];}
 		File f = new File(symptomsFile);
-		if(!f.isFile()) {System.out.println("Erreur : le fichier "+symptomsFile+" n'existe pas !");return;}
+		if(!f.isFile()) {System.out.println("Erreur : le fichier "+symptomsFile+" n'existe pas !");throw new IOException(symptomsFile);}
+		
 		List<String> symptomsList = readList(symptomsFile);
 		TreeMap<String, Integer> symptomsOccurence = occurencesCount(symptomsList);
 		fileWriter(resultsFile,symptomsOccurence);
-	}
+		}
+		catch (IOException e) {System.out.println("MyException Erreur : le fichier n'existe pas !" + e);}
+		finally {}
+		}
 	
 	static List<String> readList(String filename)	{  //lit le fichier des symptomes et en retourne une liste triée
 		ISymptomReader symptomData = new ReadSymptomDataFromFile(filename);
