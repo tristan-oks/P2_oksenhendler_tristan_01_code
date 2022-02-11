@@ -1,11 +1,8 @@
 package com.hemebiotech.analytics;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -16,35 +13,59 @@ import java.util.TreeMap;
 
 public class AnalyticsCounter {
 		
+	/**
+	 * 
+	 * lit un fichier de symptomes et crée un fichier des occurrences de chaque symptome trié alphanumériquement
+	 * utilisera symptoms.txt en entrée et result.out en sortie par défaut,
+	 * avec possibilité de changer cela dans la ligne de commande.
+	 * @arg[0] fichier d'entrée
+	 * @arg[1] fichier de sortie
+	 *
+	 */
 	public static void main(String args[]) {
-		try {
 		String symptomsFile;
 		String resultsFile;
+		// List<String> symptomsList;
+		
 		if (args.length == 0) {symptomsFile = "symptoms.txt";resultsFile = "result.out";}
 		else if (args.length == 1) {symptomsFile = args[0];resultsFile = "result.out";}
 		else {symptomsFile = args[0];resultsFile = args[1];}
-		File f = new File(symptomsFile);
-		if(!f.isFile()) {System.out.println("Erreur : le fichier "+symptomsFile+" n'existe pas !");throw new IOException(symptomsFile);}
+		//File f = new File(symptomsFile);
+		//if(!f.isFile()) {System.out.println("Erreur : le fichier "+symptomsFile+" n'existe pas !");return;} 
 		
-		List<String> symptomsList = readList(symptomsFile);
-		TreeMap<String, Integer> symptomsOccurence = occurencesCount(symptomsList);
-		fileWriter(resultsFile,symptomsOccurence);
+		List<String> symptomsList = reading(symptomsFile);	// crée la liste de symptomes triés
+		TreeMap<String, Integer> symptomsOccurence = count(symptomsList); //crée le dictionnaire symptomes,occurrences
+		try {
+			saving(resultsFile,symptomsOccurence) ; //écrit le fichier résultat
+			} 
+		catch (IOException e) {e.printStackTrace();}
 		}
-		catch (IOException e) {System.out.println("MyException Erreur : le fichier n'existe pas !" + e);}
-		finally {}
-		}
-	
-	static List<String> readList(String filename)	{  //lit le fichier des symptomes et en retourne une liste triée
-		ISymptomReader symptomData = new ReadSymptomDataFromFile(filename);
+		
+	/**
+	 * 
+	 * lit un fichier de symptomes et en retourne une liste triée alphanumériquement
+	 * @param fileName un fichier de symptomes
+	 * @return symptomsList une liste triée alphanumériquement
+	 *
+	 */
+	static List<String> reading(String fileName)	{ 
+		ISymptomReader symptomData = new ReadSymptomDataFromFile(fileName);
 		List<String> symptomsList = symptomData.GetSymptoms();
 		symptomsList.sort(null); 		// tri alphabetique de la liste des symptomes. Va rendre le comptage beaucoup plus facile
 		return symptomsList;
 	}
 	
-	static TreeMap<String,Integer> occurencesCount(List<String> list) {// lit la liste des symptomes en retourne un TreeMap comptant les occurences
+	/**
+	 * 
+	 * lit la liste des symptomes et en retourne un TreeMap comptant les occurences de chaque symptome
+	 * @param list la liste des symptomes triée
+	 * @return TreeMap un dictionnaire des symptomes et leurs occurrences
+	 *
+	 */
+	static TreeMap<String,Integer> count(List<String> list) {
 		TreeMap<String, Integer> symptomsOccurence = new TreeMap<String, Integer>();
 		String oldSymptom = ""; // pour tester si le symptome change
-		int occurence = 0;		// pour compter les occurences des symptomes
+		int occurence = 0;		// pour compter les occurrences des symptomes
 		
 		for (String line : list) {
 				if (line.equals(oldSymptom)) {
@@ -63,13 +84,16 @@ public class AnalyticsCounter {
 		return symptomsOccurence;
 	}
 	
-	static void fileWriter(String fileName, TreeMap<String,Integer> Map) throws IOException {// lit le TreeMap des occurences et écrit le fichier des résultats
-		FileWriter fileWriter = new FileWriter(fileName, false);
-		BufferedWriter writer = new BufferedWriter (fileWriter);
-		for(Map.Entry<String,Integer> entry : Map.entrySet()) {
-			writer.write(entry.getKey() + " : " + entry.getValue());
-		    writer.newLine();			
+	/**
+	 * 
+	 * lit le TreeMap des occurences et écrit le fichier des résultats	
+	 * @param fileName le nom du fichier de sortie 
+	 * @param map le dictionnaire des symptomes et de leurs occurrences
+	 * 
+	 */
+	static void saving(String fileName, TreeMap<String,Integer> map) throws IOException {
+		System.out.println("ecriture du fichier " + fileName);
+		IResultWriter result = new WriteResultToFile(fileName, map);
+		result.resultWriter(fileName, map);
 		}
-		writer.close();
-	}
 }
