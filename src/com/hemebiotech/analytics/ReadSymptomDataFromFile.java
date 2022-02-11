@@ -39,8 +39,8 @@ public class ReadSymptomDataFromFile implements ISymptomReader {
 			} catch (IOException e) {
 				System.out.println("Erreur : le fichier d'entrée n'existe pas !");
 				//e.printStackTrace();
-				int n=0;
-				System.exit(n);
+				//int n=0;
+				System.exit(1);
 			}
 		}
 		
