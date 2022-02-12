@@ -22,8 +22,8 @@ public class WriteResultToFile implements IResultWriter {
 	 * @param fileName the name of the results file; 
 	 * @param map the Treemap of the symptoms and occurrences
 	 */
-	public WriteResultToFile(String fileName, TreeMap<String,Integer> map) {
-	}
+	//public WriteResultToFile() {
+	//}
 
 	@Override
 	public void resultWriter(String fileName, TreeMap<String,Integer> map) throws IOException {
