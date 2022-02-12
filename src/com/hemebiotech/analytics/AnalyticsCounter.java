@@ -1,25 +1,30 @@
 package com.hemebiotech.analytics;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
 /**
  * 
+ * read a symptoms file and write a file containing the occurrences of each symptom sorted alphabetically.
+ * use entry file symtoms.txt and create result.out by default, 
+ * with option to change it by specifying other names in the command line
+ * 
  * @author ------
  *
  */
+// lit un fichier de symptomes et crée un fichier des occurrences de chaque symptome trié alphanumériquement
+// utilisera symptoms.txt en entrée et result.out en sortie par défaut,
+// avec possibilité de changer cela dans la ligne de commande.
 
 public class AnalyticsCounter {
 		
 	/**
 	 * 
-	 * lit un fichier de symptomes et crée un fichier des occurrences de chaque symptome trié alphanumériquement
-	 * utilisera symptoms.txt en entrée et result.out en sortie par défaut,
-	 * avec possibilité de changer cela dans la ligne de commande.
-	 * @arg[0] fichier d'entrée
-	 * @arg[1] fichier de sortie
+	 * @param args[] entry file name + result file name
+	 * args[0] fichier d'entrée
+	 * args[1] fichier de sortie
 	 *
 	 */
 	public static void main(String args[]) {
@@ -33,7 +38,7 @@ public class AnalyticsCounter {
 		//File f = new File(symptomsFile);
 		//if(!f.isFile()) {System.out.println("Erreur : le fichier "+symptomsFile+" n'existe pas !");return;} 
 		
-		List<String> symptomsList = reading(symptomsFile);	// crée la liste de symptomes triés
+		List<String> symptomsList = reading(symptomsFile);	// crée la liste de symptomes
 		TreeMap<String, Integer> symptomsOccurence = count(symptomsList); //crée le dictionnaire symptomes,occurrences
 		try {
 			saving(resultsFile,symptomsOccurence) ; //écrit le fichier résultat
@@ -43,43 +48,32 @@ public class AnalyticsCounter {
 		
 	/**
 	 * 
-	 * lit un fichier de symptomes et en retourne une liste triée alphanumériquement
-	 * @param fileName un fichier de symptomes
-	 * @return symptomsList une liste triée alphanumériquement
+	 * read the symptoms file and return a list.
+	 //lit un fichier de symptomes et en retourne une liste
+	 * 
+	 * @param fileName symptoms file
+	 * @return symptomsList alphabetically sorted list
 	 *
 	 */
 	static List<String> reading(String fileName)	{ 
 		ISymptomReader symptomData = new ReadSymptomDataFromFile(fileName);
 		List<String> symptomsList = symptomData.GetSymptoms();
-		symptomsList.sort(null); 		// tri alphabetique de la liste des symptomes. Va rendre le comptage beaucoup plus facile
 		return symptomsList;
 	}
 	
 	/**
 	 * 
-	 * lit la liste des symptomes et en retourne un TreeMap comptant les occurences de chaque symptome
+	 * lit la liste des symptomes et en retourne un TreeMap comptant les occurrences de chaque symptome
 	 * @param list la liste des symptomes triée
 	 * @return TreeMap un dictionnaire des symptomes et leurs occurrences
 	 *
 	 */
 	static TreeMap<String,Integer> count(List<String> list) {
 		TreeMap<String, Integer> symptomsOccurence = new TreeMap<String, Integer>();
-		String oldSymptom = ""; // pour tester si le symptome change
-		int occurence = 0;		// pour compter les occurrences des symptomes
 		
 		for (String line : list) {
-				if (line.equals(oldSymptom)) {
-					occurence += 1; 
-					System.out.println("same symptom : " + line + ", occurence : " + occurence);
-					symptomsOccurence.put(line,occurence);
-					System.out.println("Map : " + line + " : " + symptomsOccurence.get(line)); // voir si la map se remplit bien
-					}
-				else {System.out.println("New symptom : " + line);
-					occurence = 1;
-					symptomsOccurence.put(line,occurence);
-					System.out.println("Map : " + line + " : " + symptomsOccurence.get(line)); // voir si la map se remplit bien
-					oldSymptom = line;
-					}
+			System.out.println(line + ": " + Collections.frequency(list, line));
+			symptomsOccurence.put(line,Collections.frequency(list, line));
 			}
 		return symptomsOccurence;
 	}

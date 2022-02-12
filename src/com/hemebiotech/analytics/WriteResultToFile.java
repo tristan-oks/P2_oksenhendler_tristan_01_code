@@ -7,24 +7,27 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * @author ------
  * 
  * Will read the TreeMap of symptoms and occurrences and write the file of the results
+ * 
+ * @author ------
  *
  */
 
 public class WriteResultToFile implements IResultWriter {
-	
+	/**
+	 * 
+	 * Will read the TreeMap of symptoms and occurrences and write the file of the results
+	 * 
+	 * @param fileName the name of the results file; 
+	 * @param map the Treemap of the symptoms and occurrences
+	 */
 	public WriteResultToFile(String fileName, TreeMap<String,Integer> map) {
 	}
 
 	@Override
 	public void resultWriter(String fileName, TreeMap<String,Integer> map) throws IOException {
-		/**
-		 * 
-		 * @param fileName the name of the results file; 
-		 * @param map the Treemap of the symptoms and occurrences
-		 */
+		
 		System.out.println("resultWriter " + fileName);
 		FileWriter fileWriter = new FileWriter(fileName, false);
 		BufferedWriter writer = new BufferedWriter (fileWriter);
