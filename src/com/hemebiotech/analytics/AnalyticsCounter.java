@@ -87,7 +87,7 @@ public class AnalyticsCounter {
 	 */
 	static void saving(String fileName, TreeMap<String,Integer> map) throws IOException {
 		System.out.println("ecriture du fichier " + fileName);
-		IResultWriter result = new WriteResultToFile(fileName, map);
+		IResultWriter result = new WriteResultToFile();
 		result.resultWriter(fileName, map);
 		}
 }
