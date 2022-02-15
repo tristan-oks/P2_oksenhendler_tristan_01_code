@@ -10,11 +10,15 @@ import java.util.TreeMap;
  * 
  * Will read the TreeMap of symptoms and occurrences and write the file of the results
  * 
- * @author ------
+ * @author oksenhendler tristan
  *
  */
-
 public class WriteResultToFile implements IResultWriter {
+	
+	public WriteResultToFile() {
+		super();
+	}
+
 	/**
 	 * 
 	 * Will read the TreeMap of symptoms and occurrences and write the file of the results
@@ -22,21 +26,19 @@ public class WriteResultToFile implements IResultWriter {
 	 * @param fileName the name of the results file; 
 	 * @param map the Treemap of the symptoms and occurrences
 	 */
-	//public WriteResultToFile() {
-	//}
-
 	@Override
-	public void resultWriter(String fileName, TreeMap<String,Integer> map) throws IOException {
+	public void resultWriter(String fileName, TreeMap<String,Integer> map) {
 		
-		System.out.println("resultWriter " + fileName);
-		FileWriter fileWriter = new FileWriter(fileName, false);
-		BufferedWriter writer = new BufferedWriter (fileWriter);
 		try {
+			FileWriter fileWriter = new FileWriter(fileName, false);	
+			BufferedWriter writer = new BufferedWriter (fileWriter);
 			for(Map.Entry<String,Integer> entry : map.entrySet()) {
 				writer.write(entry.getKey() + " : " + entry.getValue());
 			    writer.newLine();			
 			}
-		} catch (IOException e) {e.printStackTrace();}
-		writer.close();
+			writer.close();
+			} catch (IOException e) {
+			System.out.println("Error!");
+		}
 	}
 }
