@@ -37,7 +37,7 @@ public class AnalyticsCounter {
 	 * 
 	 */
 	static String[] getFilesNames(String args[]) {
-		String[] fileNames = {"symptoms.txt","result.out"};
+		String[] fileNames = {"symptoms.txt","results.out"};
 		if (args.length == 1) {
 			fileNames[0] = args[0];
 		} else if (args.length == 2){
