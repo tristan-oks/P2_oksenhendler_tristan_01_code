@@ -57,7 +57,7 @@ public class AnalyticsCounter {
    */
   static List<String> reading(String fileName) {
     ISymptomReader symptomData = new ReadSymptomDataFromFile(fileName);
-    List<String> symptomsList = symptomData.GetSymptoms();
+    List<String> symptomsList = symptomData.getSymptoms();
     return symptomsList;
   }
 
